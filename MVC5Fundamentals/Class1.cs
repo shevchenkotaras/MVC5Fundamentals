@@ -8,5 +8,6 @@ namespace MVC5Fundamentals
 {
     public class Class1
     {
+
     }
 }
