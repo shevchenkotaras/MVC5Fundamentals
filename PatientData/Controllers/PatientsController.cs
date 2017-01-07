@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using PatientData.Models;
 
@@ -19,37 +20,39 @@ namespace PatientData.Controllers
         }
         public IEnumerable<Patient> Get()
         {
-            return  _db.Patients;
+            return _db.Patients;
         }
 
-        public HttpResponseMessage Get(int id)
+        public IHttpActionResult Get(int id)
         {
             try
             {
                 Patient patien = _db.Patients.First(x => x.Id == id);
-                return Request.CreateResponse(patien);
+                return Ok(patien);
+                //return Request.CreateResponse(patien);
             }
             catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Patient not found");
+                return NotFound();
+                //return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Patient not found");
             }
         }
 
         [Route("api/patiensts/{id}/medications")]
-        public HttpResponseMessage GetMedications(int id)
+        public IHttpActionResult GetMedications(int id)
         {
             try
             {
                 var medications = _db.Medications.Where(x => x.PatientId == id);
                 if (!medications.Any())
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "medications not found");
+                    return NotFound();
                 }
-                return Request.CreateResponse(medications);
+                return Ok(medications);
             }
             catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "medications not found");
+                return NotFound();
             }
         }
     }
